@@ -5,3 +5,6 @@
 
 # Mac file
 .DS_Store
+
+# Ignore config.js to prevent any leak of email credentials
+config.js
