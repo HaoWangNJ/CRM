@@ -203,19 +203,19 @@
       }
     },
     accountOpen: function() {
-      location.href = '/admin/accounts/'+ this.model.get('roles').account._id +'/';
+      location.href = '/admin/students/'+ this.model.get('roles').student._id +'/';
     },
     accountLink: function() {
       this.model.save({
         newAccountId: $('[name="newAccountId"]').val()
       },{
-        url: this.model.url() +'role-account/'
+        url: this.model.url() +'role-student/'
       });
     },
     accountUnlink: function() {
       if (confirm('Are you sure?')) {
         this.model.destroy({
-          url: this.model.url() +'role-account/',
+          url: this.model.url() +'role-student/',
           success: function(model, response) {
             if (response.user) {
               app.mainView.model.set(response.user);

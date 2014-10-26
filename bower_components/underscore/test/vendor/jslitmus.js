@@ -2,7 +2,7 @@
 //
 // History:
 //   2008-10-27: Initial release
-//   2008-11-09: Account for iteration loop overhead
+//   2008-11-09: Student for iteration loop overhead
 //   2008-11-13: Added OS detection
 //   2009-02-25: Create tinyURL automatically, shift-click runs tests in reverse
 //
@@ -273,7 +273,7 @@
     /**
     * Get the number of operations per second for this test.
     * 
-    * @param normalize if true, iteration loop overhead taken into account
+    * @param normalize if true, iteration loop overhead taken into student
     */
     getHz: function(/**Boolean*/ normalize) {
       var p = this.period;

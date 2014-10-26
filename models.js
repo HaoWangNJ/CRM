@@ -1,5 +1,6 @@
 'use strict';
 
+var exports;
 exports = module.exports = function(app, mongoose) {
   //embeddable docs first
   require('./schema/Note')(app, mongoose);
@@ -11,6 +12,7 @@ exports = module.exports = function(app, mongoose) {
   require('./schema/User')(app, mongoose);
   require('./schema/Admin')(app, mongoose);
   require('./schema/AdminGroup')(app, mongoose);
-  require('./schema/Account')(app, mongoose);
+  require('./schema/Student')(app, mongoose);
+  require('./schema/Teacher')(app, mongoose);
   require('./schema/LoginAttempt')(app, mongoose);
 };

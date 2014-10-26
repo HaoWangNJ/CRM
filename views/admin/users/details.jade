@@ -80,12 +80,12 @@ block body
         label Account:
         div.input-group
           |<% if (roles && roles.account) { %>
-          input.form-control(disabled=true, value!='<%= roles.account.name.full %>')
+          input.form-control(disabled=true, value!='<%= roles.student.name.full %>')
           div.input-group-btn
             button.btn.btn-warning.btn-account-unlink(type='button') Unlink
             button.btn.btn-default.btn-account-open(type='button') Open
           |<% } else { %>
-          input.form-control(name='newAccountId', type='text', placeholder='enter account id')
+          input.form-control(name='newAccountId', type='text', placeholder='enter student id')
           div.input-group-btn
             button.btn.btn-success.btn-account-link(type='button') Link
           |<% } %>

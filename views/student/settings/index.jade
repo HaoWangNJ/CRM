@@ -4,7 +4,7 @@ block head
   title Account Settings
 
 block feet
-  script(src='/views/account/settings/index.min.js?#{cacheBreaker}')
+  script(src='/views/student/settings/index.min.js?#{cacheBreaker}')
 
 block body
   div.row
@@ -26,47 +26,47 @@ block body
               |#{oauthMessage}
         if oauthTwitter
           if oauthTwitterActive
-            a.btn.btn-block.btn-danger(href='/account/settings/twitter/disconnect/')
+            a.btn.btn-block.btn-danger(href='/student/settings/twitter/disconnect/')
               i.fa.fa-twitter.fa-lg
               |  Disconnect Twitter
           else
-            a.btn.btn-block.btn-default(href='/account/settings/twitter/')
+            a.btn.btn-block.btn-default(href='/student/settings/twitter/')
               i.fa.fa-twitter.fa-lg
               |  Connect Twitter
         if oauthGitHub
           if oauthGitHubActive
-            a.btn.btn-block.btn-danger(href='/account/settings/github/disconnect/')
+            a.btn.btn-block.btn-danger(href='/student/settings/github/disconnect/')
               i.fa.fa-github.fa-lg
               |  Disconnect GitHub
           else
-            a.btn.btn-block.btn-default(href='/account/settings/github/')
+            a.btn.btn-block.btn-default(href='/student/settings/github/')
               i.fa.fa-github.fa-lg
               |  Connect GitHub
         if oauthFacebook
           if oauthFacebookActive
-            a.btn.btn-block.btn-danger(href='/account/settings/facebook/disconnect/')
+            a.btn.btn-block.btn-danger(href='/student/settings/facebook/disconnect/')
               i.fa.fa-facebook-square.fa-lg
               |  Disconnect Facebook
           else
-            a.btn.btn-block.btn-default(href='/account/settings/facebook/')
+            a.btn.btn-block.btn-default(href='/student/settings/facebook/')
               i.fa.fa-facebook-square.fa-lg
               |  Connect Facebook
         if oauthGoogle
           if oauthGoogleActive
-            a.btn.btn-block.btn-danger(href='/account/settings/google/disconnect/')
+            a.btn.btn-block.btn-danger(href='/student/settings/google/disconnect/')
               i.fa.fa-google-plus-square.fa-lg
               |  Disconnect Google
           else
-            a.btn.btn-block.btn-default(href='/account/settings/google/')
+            a.btn.btn-block.btn-default(href='/student/settings/google/')
               i.fa.fa-google-plus-square.fa-lg
               |  Connect Google
         if oauthTumblr
           if oauthTumblrActive
-            a.btn.btn-block.btn-danger(href='/account/settings/tumblr/disconnect/')
+            a.btn.btn-block.btn-danger(href='/student/settings/tumblr/disconnect/')
               i.fa.fa-tumblr-square.fa-lg
               |  Disconnect Tumblr
           else
-            a.btn.btn-block.btn-default(href='/account/settings/tumblr/')
+            a.btn.btn-block.btn-default(href='/student/settings/tumblr/')
               i.fa.fa-tumblr-square.fa-lg
               |  Connect Tumblr
 
@@ -160,5 +160,5 @@ block body
       div.form-group
         button.btn.btn-primary.btn-password(type='button') Set Password
 
-  script(type='text/template', id='data-account') !{data.account}
+  script(type='text/template', id='data-student') !{data.student}
   script(type='text/template', id='data-user') !{data.user}

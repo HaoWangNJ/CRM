@@ -36,7 +36,9 @@ block body
           select.form-control(name='roles')
             option(value='') any
             option(value='admin') admin
-            option(value='account') account
+            option(value='student') student
+            // TODO: There is a bug. When option teacher is selected, all users are returned.
+            option(value='teacher') teacher
         div.col-sm-2
           label Is Active
           select.form-control(name='isActive')

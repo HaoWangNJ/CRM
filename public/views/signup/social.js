@@ -48,7 +48,7 @@
       },{
         success: function(model, response) {
           if (response.success) {
-            location.href = '/account/';
+            location.href = '/student/';
           }
           else {
             model.set(response);

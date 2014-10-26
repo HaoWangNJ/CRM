@@ -28,12 +28,12 @@
         outcome.push({name: user.username, url: '/admin/users/'+ user._id +'/'});
       });
 
-      if (response.accounts.length) {
+      if (response.students.length) {
         outcome.push({name: 'Accounts', type: 'header'});
       }
 
-      _.each(response.accounts, function(account) {
-        outcome.push({name: account.name.full, url: '/admin/accounts/'+ account._id +'/'});
+      _.each(response.students, function(account) {
+        outcome.push({name: account.name.full, url: '/admin/students/'+ account._id +'/'});
       });
 
       if (response.administrators.length) {

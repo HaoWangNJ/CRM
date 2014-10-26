@@ -115,13 +115,13 @@ exports.signup = function(req, res){
       ]
     };
 
-    req.app.db.models.Account.create(fieldsToSet, function(err, account) {
+    req.app.db.models.Student.create(fieldsToSet, function(err, account) {
       if (err) {
         return workflow.emit('exception', err);
       }
 
-      //update user with account
-      workflow.user.roles.account = account._id;
+      //update user with student
+      workflow.user.roles.student = account._id;
       workflow.user.save(function(err, user) {
         if (err) {
           return workflow.emit('exception', err);
@@ -136,7 +136,7 @@ exports.signup = function(req, res){
     req.app.utility.sendmail(req, res, {
       from: req.app.config.smtp.from.name +' <'+ req.app.config.smtp.from.address +'>',
       to: req.body.email,
-      subject: 'Your '+ req.app.config.projectName +' Account',
+      subject: 'Your '+ req.app.config.projectName +' Student',
       textPath: 'signup/email-text',
       htmlPath: 'signup/email-html',
       locals: {
@@ -198,7 +198,7 @@ exports.signupTwitter = function(req, res, next) {
       }
       else {
         res.render('signup/index', {
-          oauthMessage: 'We found a user linked to your Twitter account.',
+          oauthMessage: 'We found a user linked to your Twitter student.',
           oauthTwitter: !!req.app.config.oauth.twitter.key,
           oauthGitHub: !!req.app.config.oauth.github.key,
           oauthFacebook: !!req.app.config.oauth.facebook.key,
@@ -227,7 +227,7 @@ exports.signupGitHub = function(req, res, next) {
       }
       else {
         res.render('signup/index', {
-          oauthMessage: 'We found a user linked to your GitHub account.',
+          oauthMessage: 'We found a user linked to your GitHub student.',
           oauthTwitter: !!req.app.config.oauth.twitter.key,
           oauthGitHub: !!req.app.config.oauth.github.key,
           oauthFacebook: !!req.app.config.oauth.facebook.key,
@@ -255,7 +255,7 @@ exports.signupFacebook = function(req, res, next) {
       }
       else {
         res.render('signup/index', {
-          oauthMessage: 'We found a user linked to your Facebook account.',
+          oauthMessage: 'We found a user linked to your Facebook student.',
           oauthTwitter: !!req.app.config.oauth.twitter.key,
           oauthGitHub: !!req.app.config.oauth.github.key,
           oauthFacebook: !!req.app.config.oauth.facebook.key,
@@ -283,7 +283,7 @@ exports.signupGoogle = function(req, res, next) {
       }
       else {
         res.render('signup/index', {
-          oauthMessage: 'We found a user linked to your Google account.',
+          oauthMessage: 'We found a user linked to your Google student.',
           oauthTwitter: !!req.app.config.oauth.twitter.key,
           oauthGitHub: !!req.app.config.oauth.github.key,
           oauthFacebook: !!req.app.config.oauth.facebook.key,
@@ -315,7 +315,7 @@ exports.signupTumblr = function(req, res, next) {
       }
       else {
         res.render('signup/index', {
-          oauthMessage: 'We found a user linked to your Tumblr account.',
+          oauthMessage: 'We found a user linked to your Tumblr student.',
           oauthTwitter: !!req.app.config.oauth.twitter.key,
           oauthGitHub: !!req.app.config.oauth.github.key,
           oauthFacebook: !!req.app.config.oauth.facebook.key,
@@ -421,13 +421,13 @@ exports.signupSocial = function(req, res){
         nameParts[1] || ''
       ]
     };
-    req.app.db.models.Account.create(fieldsToSet, function(err, account) {
+    req.app.db.models.Student.create(fieldsToSet, function(err, account) {
       if (err) {
         return workflow.emit('exception', err);
       }
 
-      //update user with account
-      workflow.user.roles.account = account._id;
+      //update user with student
+      workflow.user.roles.student = account._id;
       workflow.user.save(function(err, user) {
         if (err) {
           return workflow.emit('exception', err);
@@ -442,7 +442,7 @@ exports.signupSocial = function(req, res){
     req.app.utility.sendmail(req, res, {
       from: req.app.config.smtp.from.name +' <'+ req.app.config.smtp.from.address +'>',
       to: req.body.email,
-      subject: 'Your '+ req.app.config.projectName +' Account',
+      subject: 'Your '+ req.app.config.projectName +' Student',
       textPath: 'signup/email-text',
       htmlPath: 'signup/email-html',
       locals: {
