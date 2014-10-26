@@ -4,8 +4,8 @@ exports.port = process.env.PORT || 3000;
 exports.mongodb = {
   uri: process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'localhost/drywall'
 };
-exports.companyName = 'Acme, Inc.';
-exports.projectName = 'Drywall';
+exports.companyName = 'HUIJIE, Inc.';
+exports.projectName = 'Chess';
 exports.systemEmail = 'houghtonian@gmail.com';
 exports.cryptoKey = 'k3yb0ardc4t';
 exports.loginAttempts = {
