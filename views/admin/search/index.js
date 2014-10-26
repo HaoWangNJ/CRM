@@ -16,14 +16,14 @@ exports.find = function(req, res, next){
     });
   };
 
-  var searchAccounts = function(done) {
-    req.app.db.models.Account.find({search: regexQuery}, 'name.full').sort('name.full').limit(10).lean().exec(function(err, results) {
+  var searchStudents = function(done) {
+    req.app.db.models.Student.find({search: regexQuery}, 'name.full').sort('name.full').limit(10).lean().exec(function(err, results) {
       if (err) {
         return done(err, null);
       }
 
-      outcome.accounts = results;
-      return done(null, 'searchAccounts');
+      outcome.students = results;
+      return done(null, 'searchStudents');
     });
   };
 
@@ -46,5 +46,5 @@ exports.find = function(req, res, next){
     res.send(outcome);
   };
 
-  require('async').parallel([searchUsers, searchAccounts, searchAdministrators], asyncFinally);
+  require('async').parallel([searchUsers, searchStudents, searchAdministrators], asyncFinally);
 };

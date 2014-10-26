@@ -2,7 +2,7 @@
 
 var exports;
 exports = module.exports = function(app, mongoose) {
-  var accountSchema = new mongoose.Schema({
+  var studentSchema = new mongoose.Schema({
     user: {
       id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
       name: { type: String, default: '' }
@@ -36,10 +36,10 @@ exports = module.exports = function(app, mongoose) {
     },
     search: [String]
   });
-  accountSchema.plugin(require('./plugins/pagedFind'));
-  accountSchema.index({ user: 1 });
-  accountSchema.index({ 'status.id': 1 });
-  accountSchema.index({ search: 1 });
-  accountSchema.set('autoIndex', (app.get('env') === 'development'));
-  app.db.model('Account', accountSchema);
+  studentSchema.plugin(require('./plugins/pagedFind'));
+  studentSchema.index({ user: 1 });
+  studentSchema.index({ 'status.id': 1 });
+  studentSchema.index({ search: 1 });
+  studentSchema.set('autoIndex', (app.get('env') === 'development'));
+  app.db.model('Student', studentSchema);
 };

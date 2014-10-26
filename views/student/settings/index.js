@@ -3,13 +3,13 @@
 var renderSettings = function(req, res, next, oauthMessage) {
   var outcome = {};
 
-  var getAccountData = function(callback) {
-    req.app.db.models.Account.findById(req.user.roles.account.id, 'name company phone zip').exec(function(err, account) {
+  var getStudentData = function(callback) {
+    req.app.db.models.Student.findById(req.user.roles.student.id, 'name company phone zip').exec(function(err, student) {
       if (err) {
         return callback(err, null);
       }
 
-      outcome.account = account;
+      outcome.student = student;
       callback(null, 'done');
     });
   };
@@ -30,9 +30,9 @@ var renderSettings = function(req, res, next, oauthMessage) {
       return next(err);
     }
 
-    res.render('account/settings/index', {
+    res.render('student/settings/index', {
       data: {
-        account: escape(JSON.stringify(outcome.account)),
+        student: escape(JSON.stringify(outcome.student)),
         user: escape(JSON.stringify(outcome.user))
       },
       oauthMessage: oauthMessage,
@@ -49,7 +49,7 @@ var renderSettings = function(req, res, next, oauthMessage) {
     });
   };
 
-  require('async').parallel([getAccountData, getUserData], asyncFinally);
+  require('async').parallel([getStudentData, getUserData], asyncFinally);
 };
 
 exports.init = function(req, res, next){
@@ -59,7 +59,7 @@ exports.init = function(req, res, next){
 exports.connectTwitter = function(req, res, next){
   req._passport.instance.authenticate('twitter', function(err, user, info) {
     if (!info || !info.profile) {
-      return res.redirect('/account/settings/');
+      return res.redirect('/student/settings/');
     }
 
     req.app.db.models.User.findOne({ 'twitter.id': info.profile.id, _id: { $ne: req.user.id } }, function(err, user) {
@@ -68,7 +68,7 @@ exports.connectTwitter = function(req, res, next){
       }
 
       if (user) {
-        renderSettings(req, res, next, 'Another user has already connected with that Twitter account.');
+        renderSettings(req, res, next, 'Another user has already connected with that Twitter student.');
       }
       else {
         req.app.db.models.User.findByIdAndUpdate(req.user.id, { 'twitter.id': info.profile.id }, function(err, user) {
@@ -76,7 +76,7 @@ exports.connectTwitter = function(req, res, next){
             return next(err);
           }
 
-          res.redirect('/account/settings/');
+          res.redirect('/student/settings/');
         });
       }
     });
@@ -86,7 +86,7 @@ exports.connectTwitter = function(req, res, next){
 exports.connectGitHub = function(req, res, next){
   req._passport.instance.authenticate('github', function(err, user, info) {
     if (!info || !info.profile) {
-      return res.redirect('/account/settings/');
+      return res.redirect('/student/settings/');
     }
 
     req.app.db.models.User.findOne({ 'github.id': info.profile.id, _id: { $ne: req.user.id } }, function(err, user) {
@@ -95,7 +95,7 @@ exports.connectGitHub = function(req, res, next){
       }
 
       if (user) {
-        renderSettings(req, res, next, 'Another user has already connected with that GitHub account.');
+        renderSettings(req, res, next, 'Another user has already connected with that GitHub student.');
       }
       else {
         req.app.db.models.User.findByIdAndUpdate(req.user.id, { 'github.id': info.profile.id }, function(err, user) {
@@ -103,7 +103,7 @@ exports.connectGitHub = function(req, res, next){
             return next(err);
           }
 
-          res.redirect('/account/settings/');
+          res.redirect('/student/settings/');
         });
       }
     });
@@ -111,9 +111,9 @@ exports.connectGitHub = function(req, res, next){
 };
 
 exports.connectFacebook = function(req, res, next){
-  req._passport.instance.authenticate('facebook', { callbackURL: '/account/settings/facebook/callback/' }, function(err, user, info) {
+  req._passport.instance.authenticate('facebook', { callbackURL: '/student/settings/facebook/callback/' }, function(err, user, info) {
     if (!info || !info.profile) {
-      return res.redirect('/account/settings/');
+      return res.redirect('/student/settings/');
     }
 
     req.app.db.models.User.findOne({ 'facebook.id': info.profile.id, _id: { $ne: req.user.id } }, function(err, user) {
@@ -122,7 +122,7 @@ exports.connectFacebook = function(req, res, next){
       }
 
       if (user) {
-        renderSettings(req, res, next, 'Another user has already connected with that Facebook account.');
+        renderSettings(req, res, next, 'Another user has already connected with that Facebook student.');
       }
       else {
         req.app.db.models.User.findByIdAndUpdate(req.user.id, { 'facebook.id': info.profile.id }, function(err, user) {
@@ -130,7 +130,7 @@ exports.connectFacebook = function(req, res, next){
             return next(err);
           }
 
-          res.redirect('/account/settings/');
+          res.redirect('/student/settings/');
         });
       }
     });
@@ -138,9 +138,9 @@ exports.connectFacebook = function(req, res, next){
 };
 
 exports.connectGoogle = function(req, res, next){
-  req._passport.instance.authenticate('google', { callbackURL: '/account/settings/google/callback/' }, function(err, user, info) {
+  req._passport.instance.authenticate('google', { callbackURL: '/student/settings/google/callback/' }, function(err, user, info) {
     if (!info || !info.profile) {
-      return res.redirect('/account/settings/');
+      return res.redirect('/student/settings/');
     }
 
     req.app.db.models.User.findOne({ 'google.id': info.profile.id, _id: { $ne: req.user.id } }, function(err, user) {
@@ -149,7 +149,7 @@ exports.connectGoogle = function(req, res, next){
       }
 
       if (user) {
-        renderSettings(req, res, next, 'Another user has already connected with that Google account.');
+        renderSettings(req, res, next, 'Another user has already connected with that Google student.');
       }
       else {
         req.app.db.models.User.findByIdAndUpdate(req.user.id, { 'google.id': info.profile.id }, function(err, user) {
@@ -157,7 +157,7 @@ exports.connectGoogle = function(req, res, next){
             return next(err);
           }
 
-          res.redirect('/account/settings/');
+          res.redirect('/student/settings/');
         });
       }
     });
@@ -165,9 +165,9 @@ exports.connectGoogle = function(req, res, next){
 };
 
 exports.connectTumblr = function(req, res, next){
-  req._passport.instance.authenticate('tumblr', { callbackURL: '/account/settings/tumblr/callback/' }, function(err, user, info) {
+  req._passport.instance.authenticate('tumblr', { callbackURL: '/student/settings/tumblr/callback/' }, function(err, user, info) {
     if (!info || !info.profile) {
-      return res.redirect('/account/settings/');
+      return res.redirect('/student/settings/');
     }
 
     if (!info.profile.hasOwnProperty('id')) {
@@ -180,7 +180,7 @@ exports.connectTumblr = function(req, res, next){
       }
 
       if (user) {
-        renderSettings(req, res, next, 'Another user has already connected with that Tumblr account.');
+        renderSettings(req, res, next, 'Another user has already connected with that Tumblr student.');
       }
       else {
         req.app.db.models.User.findByIdAndUpdate(req.user.id, { 'tumblr.id': info.profile.id }, function(err, user) {
@@ -188,7 +188,7 @@ exports.connectTumblr = function(req, res, next){
             return next(err);
           }
 
-          res.redirect('/account/settings/');
+          res.redirect('/student/settings/');
         });
       }
     });
@@ -201,7 +201,7 @@ exports.disconnectTwitter = function(req, res, next){
       return next(err);
     }
 
-    res.redirect('/account/settings/');
+    res.redirect('/student/settings/');
   });
 };
 
@@ -211,7 +211,7 @@ exports.disconnectGitHub = function(req, res, next){
       return next(err);
     }
 
-    res.redirect('/account/settings/');
+    res.redirect('/student/settings/');
   });
 };
 
@@ -221,7 +221,7 @@ exports.disconnectFacebook = function(req, res, next){
       return next(err);
     }
 
-    res.redirect('/account/settings/');
+    res.redirect('/student/settings/');
   });
 };
 
@@ -231,7 +231,7 @@ exports.disconnectGoogle = function(req, res, next){
       return next(err);
     }
 
-    res.redirect('/account/settings/');
+    res.redirect('/student/settings/');
   });
 };
 
@@ -241,7 +241,7 @@ exports.disconnectTumblr = function(req, res, next){
       return next(err);
     }
 
-    res.redirect('/account/settings/');
+    res.redirect('/student/settings/');
   });
 };
 
@@ -261,10 +261,10 @@ exports.update = function(req, res, next){
       return workflow.emit('response');
     }
 
-    workflow.emit('patchAccount');
+    workflow.emit('patchStudent');
   });
 
-  workflow.on('patchAccount', function() {
+  workflow.on('patchStudent', function() {
     var fieldsToSet = {
       name: {
         first: req.body.first,
@@ -286,12 +286,12 @@ exports.update = function(req, res, next){
     };
     var options = { select: 'name company phone zip' };
 
-    req.app.db.models.Account.findByIdAndUpdate(req.user.roles.account.id, fieldsToSet, options, function(err, account) {
+    req.app.db.models.Student.findByIdAndUpdate(req.user.roles.student.id, fieldsToSet, options, function(err, student) {
       if (err) {
         return workflow.emit('exception', err);
       }
 
-      workflow.outcome.account = account;
+      workflow.outcome.student = student;
       return workflow.emit('response');
     });
   });
@@ -396,14 +396,14 @@ exports.identity = function(req, res, next){
   });
 
   workflow.on('patchAccount', function(user) {
-    if (user.roles.account) {
+    if (user.roles.student) {
       var fieldsToSet = {
         user: {
           id: req.user.id,
           name: user.username
         }
       };
-      req.app.db.models.Account.findByIdAndUpdate(user.roles.account, fieldsToSet, function(err, account) {
+      req.app.db.models.Student.findByIdAndUpdate(user.roles.student, fieldsToSet, function(err, account) {
         if (err) {
           return workflow.emit('exception', err);
         }
@@ -417,7 +417,7 @@ exports.identity = function(req, res, next){
   });
 
   workflow.on('populateRoles', function(user) {
-    user.populate('roles.admin roles.account', 'name.full', function(err, populatedUser) {
+    user.populate('roles.admin roles.student', 'name.full', function(err, populatedUser) {
       if (err) {
         return workflow.emit('exception', err);
       }
@@ -465,7 +465,7 @@ exports.password = function(req, res, next){
           return workflow.emit('exception', err);
         }
 
-        user.populate('roles.admin roles.account', 'name.full', function(err, user) {
+        user.populate('roles.admin roles.student', 'name.full', function(err, user) {
           if (err) {
             return workflow.emit('exception', err);
           }

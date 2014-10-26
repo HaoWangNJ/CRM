@@ -4,10 +4,10 @@ block head
   title Accounts / Details
 
 block neck
-  link(rel='stylesheet', href='/views/admin/accounts/details.min.css?#{cacheBreaker}')
+  link(rel='stylesheet', href='/views/admin/students/details.min.css?#{cacheBreaker}')
 
 block feet
-  script(src='/views/admin/accounts/details.min.js?#{cacheBreaker}')
+  script(src='/views/admin/students/details.min.js?#{cacheBreaker}')
 
 block body
   div.row
@@ -29,7 +29,7 @@ block body
   script(type='text/template', id='tmpl-header')
     div.page-header
       h1
-        a(href='/admin/accounts/') Accounts
+        a(href='/admin/students/') Accounts
         |  / <%- name.full %>
 
   script(type='text/template', id='tmpl-details')

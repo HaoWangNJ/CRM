@@ -7,7 +7,8 @@ var exports = module.exports = function(app, mongoose) {
     email: { type: String, unique: true },
     roles: {
       admin: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
-      account: { type: mongoose.Schema.Types.ObjectId, ref: 'Account' }
+      student: { type: mongoose.Schema.Types.ObjectId, ref: 'Student' },
+      teacher: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher'}
     },
     isActive: String,
     timeCreated: { type: Date, default: Date.now },
@@ -25,7 +26,7 @@ var exports = module.exports = function(app, mongoose) {
       return true;
     }
 
-    if (role === "account" && this.roles.account) {
+    if (role === "student" && this.roles.student) {
       return true;
     }
 
@@ -33,8 +34,12 @@ var exports = module.exports = function(app, mongoose) {
   };
   userSchema.methods.defaultReturnUrl = function() {
     var returnUrl = '/';
-    if (this.canPlayRoleOf('account')) {
-      returnUrl = '/account/';
+    if (this.canPlayRoleOf('student')) {
+      returnUrl = '/student/';
+    }
+
+    if(this.canPlayRoleOf('teacher')){
+      returnUrl= '/teacher/';
     }
 
     if (this.canPlayRoleOf('admin')) {

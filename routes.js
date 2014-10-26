@@ -16,11 +16,11 @@ function ensureAdmin(req, res, next) {
   res.redirect('/');
 }
 
-function ensureAccount(req, res, next) {
-  if (req.user.canPlayRoleOf('account')) {
+function ensureStudent(req, res, next) {
+  if (req.user.canPlayRoleOf('student')) {
     if (req.app.config.requireAccountVerification) {
-      if (req.user.roles.account.isVerified !== 'yes' && !/^\/account\/verification\//.test(req.url)) {
-        return res.redirect('/account/verification/');
+      if (req.user.roles.student.isVerified !== 'yes' && !/^\/account\/verification\//.test(req.url)) {
+        return res.redirect('/student/verification/');
       }
     }
     return next();
@@ -28,6 +28,14 @@ function ensureAccount(req, res, next) {
   res.redirect('/');
 }
 
+function ensureTeacher(req, res, next) {
+  if (req.user.canPlayRoleOf('teacher')) {
+    return next();
+  }
+  res.redirect('/');
+}
+
+var exports;
 exports = module.exports = function(app, passport) {
   //front end
   app.get('/', require('./views/index').init);
@@ -87,8 +95,8 @@ exports = module.exports = function(app, passport) {
   app.put('/admin/users/:id/password/', require('./views/admin/users/index').password);
   app.put('/admin/users/:id/role-admin/', require('./views/admin/users/index').linkAdmin);
   app.delete('/admin/users/:id/role-admin/', require('./views/admin/users/index').unlinkAdmin);
-  app.put('/admin/users/:id/role-account/', require('./views/admin/users/index').linkAccount);
-  app.delete('/admin/users/:id/role-account/', require('./views/admin/users/index').unlinkAccount);
+  app.put('/admin/users/:id/role-student/', require('./views/admin/users/index').linkAccount);
+  app.delete('/admin/users/:id/role-student/', require('./views/admin/users/index').unlinkAccount);
   app.delete('/admin/users/:id/', require('./views/admin/users/index').delete);
 
   //admin > administrators
@@ -110,16 +118,16 @@ exports = module.exports = function(app, passport) {
   app.put('/admin/admin-groups/:id/permissions/', require('./views/admin/admin-groups/index').permissions);
   app.delete('/admin/admin-groups/:id/', require('./views/admin/admin-groups/index').delete);
 
-  //admin > accounts
-  app.get('/admin/accounts/', require('./views/admin/accounts/index').find);
-  app.post('/admin/accounts/', require('./views/admin/accounts/index').create);
-  app.get('/admin/accounts/:id/', require('./views/admin/accounts/index').read);
-  app.put('/admin/accounts/:id/', require('./views/admin/accounts/index').update);
-  app.put('/admin/accounts/:id/user/', require('./views/admin/accounts/index').linkUser);
-  app.delete('/admin/accounts/:id/user/', require('./views/admin/accounts/index').unlinkUser);
-  app.post('/admin/accounts/:id/notes/', require('./views/admin/accounts/index').newNote);
-  app.post('/admin/accounts/:id/status/', require('./views/admin/accounts/index').newStatus);
-  app.delete('/admin/accounts/:id/', require('./views/admin/accounts/index').delete);
+  //admin > students
+  app.get('/admin/students/', require('./views/admin/students/index').find);
+  app.post('/admin/students/', require('./views/admin/students/index').create);
+  app.get('/admin/students/:id/', require('./views/admin/students/index').read);
+  app.put('/admin/students/:id/', require('./views/admin/students/index').update);
+  app.put('/admin/students/:id/user/', require('./views/admin/students/index').linkUser);
+  app.delete('/admin/students/:id/user/', require('./views/admin/students/index').unlinkUser);
+  app.post('/admin/students/:id/notes/', require('./views/admin/students/index').newNote);
+  app.post('/admin/students/:id/status/', require('./views/admin/students/index').newStatus);
+  app.delete('/admin/students/:id/', require('./views/admin/students/index').delete);
 
   //admin > statuses
   app.get('/admin/statuses/', require('./views/admin/statuses/index').find);
@@ -138,38 +146,43 @@ exports = module.exports = function(app, passport) {
   //admin > search
   app.get('/admin/search/', require('./views/admin/search/index').find);
 
-  //account
-  app.all('/account*', ensureAuthenticated);
-  app.all('/account*', ensureAccount);
-  app.get('/account/', require('./views/account/index').init);
+  //student
+  app.all('/student*', ensureAuthenticated);
+  app.all('/student*', ensureStudent);
+  app.get('/student/', require('./views/student/index').init);
 
-  //account > verification
-  app.get('/account/verification/', require('./views/account/verification/index').init);
-  app.post('/account/verification/', require('./views/account/verification/index').resendVerification);
-  app.get('/account/verification/:token/', require('./views/account/verification/index').verify);
+  //student > verification
+  app.get('/student/verification/', require('./views/student/verification/index').init);
+  app.post('/student/verification/', require('./views/student/verification/index').resendVerification);
+  app.get('/student/verification/:token/', require('./views/student/verification/index').verify);
 
-  //account > settings
-  app.get('/account/settings/', require('./views/account/settings/index').init);
-  app.put('/account/settings/', require('./views/account/settings/index').update);
-  app.put('/account/settings/identity/', require('./views/account/settings/index').identity);
-  app.put('/account/settings/password/', require('./views/account/settings/index').password);
+  //student > settings
+  app.get('/student/settings/', require('./views/student/settings/index').init);
+  app.put('/student/settings/', require('./views/student/settings/index').update);
+  app.put('/student/settings/identity/', require('./views/student/settings/index').identity);
+  app.put('/student/settings/password/', require('./views/student/settings/index').password);
 
-  //account > settings > social
-  app.get('/account/settings/twitter/', passport.authenticate('twitter', { callbackURL: '/account/settings/twitter/callback/' }));
-  app.get('/account/settings/twitter/callback/', require('./views/account/settings/index').connectTwitter);
-  app.get('/account/settings/twitter/disconnect/', require('./views/account/settings/index').disconnectTwitter);
-  app.get('/account/settings/github/', passport.authenticate('github', { callbackURL: '/account/settings/github/callback/' }));
-  app.get('/account/settings/github/callback/', require('./views/account/settings/index').connectGitHub);
-  app.get('/account/settings/github/disconnect/', require('./views/account/settings/index').disconnectGitHub);
-  app.get('/account/settings/facebook/', passport.authenticate('facebook', { callbackURL: '/account/settings/facebook/callback/' }));
-  app.get('/account/settings/facebook/callback/', require('./views/account/settings/index').connectFacebook);
-  app.get('/account/settings/facebook/disconnect/', require('./views/account/settings/index').disconnectFacebook);
-  app.get('/account/settings/google/', passport.authenticate('google', { callbackURL: '/account/settings/google/callback/', scope: ['profile email'] }));
-  app.get('/account/settings/google/callback/', require('./views/account/settings/index').connectGoogle);
-  app.get('/account/settings/google/disconnect/', require('./views/account/settings/index').disconnectGoogle);
-  app.get('/account/settings/tumblr/', passport.authenticate('tumblr', { callbackURL: '/account/settings/tumblr/callback/' }));
-  app.get('/account/settings/tumblr/callback/', require('./views/account/settings/index').connectTumblr);
-  app.get('/account/settings/tumblr/disconnect/', require('./views/account/settings/index').disconnectTumblr);
+  //student > settings > social
+  app.get('/student/settings/twitter/', passport.authenticate('twitter', { callbackURL: '/student/settings/twitter/callback/' }));
+  app.get('/student/settings/twitter/callback/', require('./views/student/settings/index').connectTwitter);
+  app.get('/student/settings/twitter/disconnect/', require('./views/student/settings/index').disconnectTwitter);
+  app.get('/student/settings/github/', passport.authenticate('github', { callbackURL: '/student/settings/github/callback/' }));
+  app.get('/student/settings/github/callback/', require('./views/student/settings/index').connectGitHub);
+  app.get('/student/settings/github/disconnect/', require('./views/student/settings/index').disconnectGitHub);
+  app.get('/student/settings/facebook/', passport.authenticate('facebook', { callbackURL: '/student/settings/facebook/callback/' }));
+  app.get('/student/settings/facebook/callback/', require('./views/student/settings/index').connectFacebook);
+  app.get('/student/settings/facebook/disconnect/', require('./views/student/settings/index').disconnectFacebook);
+  app.get('/student/settings/google/', passport.authenticate('google', { callbackURL: '/student/settings/google/callback/', scope: ['profile email'] }));
+  app.get('/student/settings/google/callback/', require('./views/student/settings/index').connectGoogle);
+  app.get('/student/settings/google/disconnect/', require('./views/student/settings/index').disconnectGoogle);
+  app.get('/student/settings/tumblr/', passport.authenticate('tumblr', { callbackURL: '/student/settings/tumblr/callback/' }));
+  app.get('/student/settings/tumblr/callback/', require('./views/student/settings/index').connectTumblr);
+  app.get('/student/settings/tumblr/disconnect/', require('./views/student/settings/index').disconnectTumblr);
+
+  //teacher
+  app.all('/teacher*', ensureAuthenticated);
+  app.all('/teacher*', ensureTeacher);
+  app.get('/teacher/', require('./views/teacher/index').init);
 
   //route not found
   app.all('*', require('./views/http/index').http404);

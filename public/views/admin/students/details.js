@@ -5,10 +5,10 @@
 
   app = app || {};
 
-  app.Account = Backbone.Model.extend({
+  app.Student = Backbone.Model.extend({
     idAttribute: '_id',
     url: function() {
-      return '/admin/accounts/'+ this.id +'/';
+      return '/admin/students/'+ this.id +'/';
     }
   });
 
@@ -20,7 +20,7 @@
       errfor: {}
     },
     url: function() {
-      return '/admin/accounts/'+ app.mainView.model.id +'/';
+      return '/admin/students/'+ app.mainView.model.id +'/';
     }
   });
 
@@ -38,12 +38,12 @@
       zip: ''
     },
     url: function() {
-      return '/admin/accounts/'+ app.mainView.model.id +'/';
+      return '/admin/students/'+ app.mainView.model.id +'/';
     },
     parse: function(response) {
-      if (response.account) {
-        app.mainView.model.set(response.account);
-        delete response.account;
+      if (response.student) {
+        app.mainView.model.set(response.student);
+        delete response.student;
       }
 
       return response;
@@ -61,12 +61,12 @@
       newUsername: ''
     },
     url: function() {
-      return '/admin/accounts/'+ app.mainView.model.id +'/user/';
+      return '/admin/students/'+ app.mainView.model.id +'/user/';
     },
     parse: function(response) {
-      if (response.account) {
-        app.mainView.model.set(response.account);
-        delete response.account;
+      if (response.student) {
+        app.mainView.model.set(response.student);
+        delete response.student;
       }
 
       return response;
@@ -82,12 +82,12 @@
       userCreated: {}
     },
     url: function() {
-      return '/admin/accounts/'+ app.mainView.model.id +'/notes/'+ (this.isNew() ? '' : this.id +'/');
+      return '/admin/students/'+ app.mainView.model.id +'/notes/'+ (this.isNew() ? '' : this.id +'/');
     },
     parse: function(response) {
-      if (response.account) {
-        app.mainView.model.set(response.account);
-        delete response.account;
+      if (response.student) {
+        app.mainView.model.set(response.student);
+        delete response.student;
       }
 
       return response;
@@ -107,12 +107,12 @@
       name: '',
     },
     url: function() {
-      return '/admin/accounts/'+ app.mainView.model.id +'/status/'+ (this.isNew() ? '' : this.id +'/');
+      return '/admin/students/'+ app.mainView.model.id +'/status/'+ (this.isNew() ? '' : this.id +'/');
     },
     parse: function(response) {
-      if (response.account) {
-        app.mainView.model.set(response.account);
-        delete response.account;
+      if (response.student) {
+        app.mainView.model.set(response.student);
+        delete response.student;
       }
 
       return response;
@@ -200,7 +200,7 @@
         this.model.destroy({
           success: function(model, response) {
             if (response.success) {
-              location.href = '/admin/accounts/';
+              location.href = '/admin/students/';
             }
             else {
               app.deleteView.model.set(response);
@@ -254,9 +254,9 @@
       if (confirm('Are you sure?')) {
         this.model.destroy({
           success: function(model, response) {
-            if (response.account) {
-              app.mainView.model.set(response.account);
-              delete response.account;
+            if (response.student) {
+              app.mainView.model.set(response.student);
+              delete response.student;
             }
 
             app.loginView.model.set(response);
@@ -455,7 +455,7 @@
     el: '.page .container',
     initialize: function() {
       app.mainView = this;
-      this.model = new app.Account( JSON.parse( unescape($('#data-record').html()) ) );
+      this.model = new app.Student( JSON.parse( unescape($('#data-record').html()) ) );
 
       app.headerView = new app.HeaderView();
       app.detailsView = new app.DetailsView();

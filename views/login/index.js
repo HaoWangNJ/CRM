@@ -97,7 +97,7 @@ exports.login = function(req, res){
             return workflow.emit('exception', err);
           }
 
-          workflow.outcome.errors.push('Username and password combination not found or your account is inactive.');
+          workflow.outcome.errors.push('Username and password combination not found or your student is inactive.');
           return workflow.emit('response');
         });
       }
@@ -129,7 +129,7 @@ exports.loginTwitter = function(req, res, next){
 
       if (!user) {
         res.render('login/index', {
-          oauthMessage: 'No users found linked to your Twitter account. You may need to create an account first.',
+          oauthMessage: 'No users found linked to your Twitter student. You may need to create an student first.',
           oauthTwitter: !!req.app.config.oauth.twitter.key,
           oauthGitHub: !!req.app.config.oauth.github.key,
           oauthFacebook: !!req.app.config.oauth.facebook.key,
@@ -163,7 +163,7 @@ exports.loginGitHub = function(req, res, next){
 
       if (!user) {
         res.render('login/index', {
-          oauthMessage: 'No users found linked to your GitHub account. You may need to create an account first.',
+          oauthMessage: 'No users found linked to your GitHub student. You may need to create an student first.',
           oauthTwitter: !!req.app.config.oauth.twitter.key,
           oauthGitHub: !!req.app.config.oauth.github.key,
           oauthFacebook: !!req.app.config.oauth.facebook.key,
@@ -197,7 +197,7 @@ exports.loginFacebook = function(req, res, next){
 
       if (!user) {
         res.render('login/index', {
-          oauthMessage: 'No users found linked to your Facebook account. You may need to create an account first.',
+          oauthMessage: 'No users found linked to your Facebook student. You may need to create an student first.',
           oauthTwitter: !!req.app.config.oauth.twitter.key,
           oauthGitHub: !!req.app.config.oauth.github.key,
           oauthFacebook: !!req.app.config.oauth.facebook.key,
@@ -231,7 +231,7 @@ exports.loginGoogle = function(req, res, next){
 
       if (!user) {
         res.render('login/index', {
-          oauthMessage: 'No users found linked to your Google account. You may need to create an account first.',
+          oauthMessage: 'No users found linked to your Google student. You may need to create an student first.',
           oauthTwitter: !!req.app.config.oauth.twitter.key,
           oauthGitHub: !!req.app.config.oauth.github.key,
           oauthFacebook: !!req.app.config.oauth.facebook.key,
@@ -269,7 +269,7 @@ exports.loginTumblr = function(req, res, next){
 
       if (!user) {
         res.render('login/index', {
-          oauthMessage: 'No users found linked to your Tumblr account. You may need to create an account first.',
+          oauthMessage: 'No users found linked to your Tumblr student. You may need to create an student first.',
           oauthTwitter: !!req.app.config.oauth.twitter.key,
           oauthGitHub: !!req.app.config.oauth.github.key,
           oauthFacebook: !!req.app.config.oauth.facebook.key,

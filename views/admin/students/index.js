@@ -4,7 +4,7 @@ exports.find = function(req, res, next){
   var outcome = {};
 
   var getStatusOptions = function(callback) {
-    req.app.db.models.Status.find({ pivot: 'Account' }, 'name').sort('name').exec(function(err, statuses) {
+    req.app.db.models.Status.find({ pivot: 'Student' }, 'name').sort('name').exec(function(err, statuses) {
       if (err) {
         return callback(err, null);
       }
@@ -30,7 +30,7 @@ exports.find = function(req, res, next){
       filters['status.id'] = req.query.status;
     }
 
-    req.app.db.models.Account.pagedFind({
+    req.app.db.models.Student.pagedFind({
       filters: filters,
       keys: 'name company phone zip userCreated status',
       limit: req.query.limit,
@@ -58,7 +58,7 @@ exports.find = function(req, res, next){
     }
     else {
       outcome.results.filters = req.query;
-      res.render('admin/accounts/index', {
+      res.render('admin/students/index', {
         data: {
           results: escape(JSON.stringify(outcome.results)),
           statuses: outcome.statuses
@@ -74,7 +74,7 @@ exports.read = function(req, res, next){
   var outcome = {};
 
   var getStatusOptions = function(callback) {
-    req.app.db.models.Status.find({ pivot: 'Account' }, 'name').sort('name').exec(function(err, statuses) {
+    req.app.db.models.Status.find({ pivot: 'Student' }, 'name').sort('name').exec(function(err, statuses) {
       if (err) {
         return callback(err, null);
       }
@@ -85,7 +85,7 @@ exports.read = function(req, res, next){
   };
 
   var getRecord = function(callback) {
-    req.app.db.models.Account.findById(req.params.id).exec(function(err, record) {
+    req.app.db.models.Student.findById(req.params.id).exec(function(err, record) {
       if (err) {
         return callback(err, null);
       }
@@ -104,7 +104,7 @@ exports.read = function(req, res, next){
       res.send(outcome.record);
     }
     else {
-      res.render('admin/accounts/details', {
+      res.render('admin/students/details', {
         data: {
           record: escape(JSON.stringify(outcome.record)),
           statuses: outcome.statuses
@@ -149,7 +149,7 @@ exports.create = function(req, res, next){
       fieldsToSet.name.last
     ];
 
-    req.app.db.models.Account.create(fieldsToSet, function(err, account) {
+    req.app.db.models.Student.create(fieldsToSet, function(err, account) {
       if (err) {
         return workflow.emit('exception', err);
       }
@@ -202,12 +202,12 @@ exports.update = function(req, res, next){
       ]
     };
 
-    req.app.db.models.Account.findByIdAndUpdate(req.params.id, fieldsToSet, function(err, account) {
+    req.app.db.models.Student.findByIdAndUpdate(req.params.id, fieldsToSet, function(err, account) {
       if (err) {
         return workflow.emit('exception', err);
       }
 
-      workflow.outcome.account = account;
+      workflow.outcome.student = account;
       return workflow.emit('response');
     });
   });
@@ -220,7 +220,7 @@ exports.linkUser = function(req, res, next){
 
   workflow.on('validate', function() {
     if (!req.user.roles.admin.isMemberOf('root')) {
-      workflow.outcome.errors.push('You may not link accounts to users.');
+      workflow.outcome.errors.push('You may not link student to users.');
       return workflow.emit('response');
     }
 
@@ -242,8 +242,8 @@ exports.linkUser = function(req, res, next){
         workflow.outcome.errors.push('User not found.');
         return workflow.emit('response');
       }
-      else if (user.roles && user.roles.account && user.roles.account !== req.params.id) {
-        workflow.outcome.errors.push('User is already linked to a different account.');
+      else if (user.roles && user.roles.student && user.roles.student !== req.params.id) {
+        workflow.outcome.errors.push('User is already linked to a different student.');
         return workflow.emit('response');
       }
 
@@ -253,13 +253,13 @@ exports.linkUser = function(req, res, next){
   });
 
   workflow.on('duplicateLinkCheck', function(callback) {
-    req.app.db.models.Account.findOne({ 'user.id': workflow.user._id, _id: {$ne: req.params.id} }).exec(function(err, account) {
+    req.app.db.models.Student.findOne({ 'user.id': workflow.user._id, _id: {$ne: req.params.id} }).exec(function(err, account) {
       if (err) {
         return workflow.emit('exception', err);
       }
 
       if (account) {
-        workflow.outcome.errors.push('Another account is already linked to that user.');
+        workflow.outcome.errors.push('Another student is already linked to that user.');
         return workflow.emit('response');
       }
 
@@ -278,12 +278,12 @@ exports.linkUser = function(req, res, next){
   });
 
   workflow.on('patchAccount', function(callback) {
-    req.app.db.models.Account.findByIdAndUpdate(req.params.id, { user: { id: workflow.user._id, name: workflow.user.username } }).exec(function(err, account) {
+    req.app.db.models.Student.findByIdAndUpdate(req.params.id, { user: { id: workflow.user._id, name: workflow.user.username } }).exec(function(err, account) {
       if (err) {
         return workflow.emit('exception', err);
       }
 
-      workflow.outcome.account = account;
+      workflow.outcome.student = account;
       workflow.emit('response');
     });
   });
@@ -296,7 +296,7 @@ exports.unlinkUser = function(req, res, next){
 
   workflow.on('validate', function() {
     if (!req.user.roles.admin.isMemberOf('root')) {
-      workflow.outcome.errors.push('You may not unlink users from accounts.');
+      workflow.outcome.errors.push('You may not unlink users from student.');
       return workflow.emit('response');
     }
 
@@ -304,13 +304,13 @@ exports.unlinkUser = function(req, res, next){
   });
 
   workflow.on('patchAccount', function() {
-    req.app.db.models.Account.findById(req.params.id).exec(function(err, account) {
+    req.app.db.models.Student.findById(req.params.id).exec(function(err, account) {
       if (err) {
         return workflow.emit('exception', err);
       }
 
       if (!account) {
-        workflow.outcome.errors.push('Account was not found.');
+        workflow.outcome.errors.push('Student was not found.');
         return workflow.emit('response');
       }
 
@@ -321,7 +321,7 @@ exports.unlinkUser = function(req, res, next){
           return workflow.emit('exception', err);
         }
 
-        workflow.outcome.account = account;
+        workflow.outcome.student = account;
         workflow.emit('patchUser', userId);
       });
     });
@@ -338,7 +338,7 @@ exports.unlinkUser = function(req, res, next){
         return workflow.emit('response');
       }
 
-      user.roles.account = undefined;
+      user.roles.student = undefined;
       user.save(function(err, user) {
         if (err) {
           return workflow.emit('exception', err);
@@ -374,12 +374,12 @@ exports.newNote = function(req, res, next){
       }
     };
 
-    req.app.db.models.Account.findByIdAndUpdate(req.params.id, { $push: { notes: noteToAdd } }, function(err, account) {
+    req.app.db.models.Student.findByIdAndUpdate(req.params.id, { $push: { notes: noteToAdd } }, function(err, account) {
       if (err) {
         return workflow.emit('exception', err);
       }
 
-      workflow.outcome.account = account;
+      workflow.outcome.student = account;
       return workflow.emit('response');
     });
   });
@@ -413,12 +413,12 @@ exports.newStatus = function(req, res, next){
       }
     };
 
-    req.app.db.models.Account.findByIdAndUpdate(req.params.id, { status: statusToAdd, $push: { statusLog: statusToAdd } }, function(err, account) {
+    req.app.db.models.Student.findByIdAndUpdate(req.params.id, { status: statusToAdd, $push: { statusLog: statusToAdd } }, function(err, account) {
       if (err) {
         return workflow.emit('exception', err);
       }
 
-      workflow.outcome.account = account;
+      workflow.outcome.student = account;
       return workflow.emit('response');
     });
   });
@@ -431,7 +431,7 @@ exports.delete = function(req, res, next){
 
   workflow.on('validate', function() {
     if (!req.user.roles.admin.isMemberOf('root')) {
-      workflow.outcome.errors.push('You may not delete accounts.');
+      workflow.outcome.errors.push('You may not delete student.');
       return workflow.emit('response');
     }
 
@@ -439,12 +439,12 @@ exports.delete = function(req, res, next){
   });
 
   workflow.on('deleteAccount', function(err) {
-    req.app.db.models.Account.findByIdAndRemove(req.params.id, function(err, account) {
+    req.app.db.models.Student.findByIdAndRemove(req.params.id, function(err, account) {
       if (err) {
         return workflow.emit('exception', err);
       }
 
-      workflow.outcome.account = account;
+      workflow.outcome.student = account;
       workflow.emit('response');
     });
   });

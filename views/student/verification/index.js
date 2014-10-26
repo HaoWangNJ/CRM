@@ -4,11 +4,11 @@ var sendVerificationEmail = function(req, res, options) {
   req.app.utility.sendmail(req, res, {
     from: req.app.config.smtp.from.name +' <'+ req.app.config.smtp.from.address +'>',
     to: options.email,
-    subject: 'Verify Your '+ req.app.config.projectName +' Account',
-    textPath: 'account/verification/email-text',
-    htmlPath: 'account/verification/email-html',
+    subject: 'Verify Your '+ req.app.config.projectName +' Student',
+    textPath: 'student/verification/email-text',
+    htmlPath: 'student/verification/email-html',
     locals: {
-      verifyURL: req.protocol +'://'+ req.headers.host +'/account/verification/' + options.verificationToken + '/',
+      verifyURL: req.protocol +'://'+ req.headers.host +'/student/verification/' + options.verificationToken + '/',
       projectName: req.app.config.projectName
     },
     success: function() {
@@ -21,7 +21,7 @@ var sendVerificationEmail = function(req, res, options) {
 };
 
 exports.init = function(req, res, next){
-  if (req.user.roles.account.isVerified === 'yes') {
+  if (req.user.roles.student.isVerified === 'yes') {
     return res.redirect(req.user.defaultReturnUrl());
   }
 
@@ -33,7 +33,7 @@ exports.init = function(req, res, next){
         return next(err);
       }
 
-      res.render('account/verification/index', {
+      res.render('student/verification/index', {
         data: {
           user: JSON.stringify(user)
         }
@@ -42,7 +42,7 @@ exports.init = function(req, res, next){
   });
 
   workflow.on('generateTokenOrRender', function() {
-    if (req.user.roles.account.verificationToken !== '') {
+    if (req.user.roles.student.verificationToken !== '') {
       return workflow.emit('renderPage');
     }
 
@@ -69,7 +69,7 @@ exports.init = function(req, res, next){
 
   workflow.on('patchAccount', function(token, hash) {
     var fieldsToSet = { verificationToken: hash };
-    req.app.db.models.Account.findByIdAndUpdate(req.user.roles.account.id, fieldsToSet, function(err, account) {
+    req.app.db.models.Student.findByIdAndUpdate(req.user.roles.student.id, fieldsToSet, function(err, account) {
       if (err) {
         return next(err);
       }
@@ -91,7 +91,7 @@ exports.init = function(req, res, next){
 };
 
 exports.resendVerification = function(req, res, next){
-  if (req.user.roles.account.isVerified === 'yes') {
+  if (req.user.roles.student.isVerified === 'yes') {
     return res.redirect(req.user.defaultReturnUrl());
   }
 
@@ -159,7 +159,7 @@ exports.resendVerification = function(req, res, next){
 
   workflow.on('patchAccount', function(token, hash) {
     var fieldsToSet = { verificationToken: hash };
-    req.app.db.models.Account.findByIdAndUpdate(req.user.roles.account.id, fieldsToSet, function(err, account) {
+    req.app.db.models.Student.findByIdAndUpdate(req.user.roles.student.id, fieldsToSet, function(err, account) {
       if (err) {
         return workflow.emit('exception', err);
       }
@@ -182,13 +182,13 @@ exports.resendVerification = function(req, res, next){
 };
 
 exports.verify = function(req, res, next){
-  req.app.db.models.User.validatePassword(req.params.token, req.user.roles.account.verificationToken, function(err, isValid) {
+  req.app.db.models.User.validatePassword(req.params.token, req.user.roles.student.verificationToken, function(err, isValid) {
     if (!isValid) {
       return res.redirect(req.user.defaultReturnUrl());
     }
 
     var fieldsToSet = { isVerified: 'yes', verificationToken: '' };
-    req.app.db.models.Account.findByIdAndUpdate(req.user.roles.account._id, fieldsToSet, function(err, account) {
+    req.app.db.models.Student.findByIdAndUpdate(req.user.roles.student._id, fieldsToSet, function(err, account) {
       if (err) {
         return next(err);
       }

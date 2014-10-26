@@ -5,14 +5,14 @@
 
   app = app || {};
 
-  app.Account = Backbone.Model.extend({
+  app.Student = Backbone.Model.extend({
     idAttribute: '_id',
-    url: '/account/settings/'
+    url: '/student/settings/'
   });
 
   app.User = Backbone.Model.extend({
     idAttribute: '_id',
-    url: '/account/settings/'
+    url: '/student/settings/'
   });
 
   app.Details = Backbone.Model.extend({
@@ -28,11 +28,11 @@
       phone: '',
       zip: ''
     },
-    url: '/account/settings/',
+    url: '/student/settings/',
     parse: function(response) {
-      if (response.account) {
-        app.mainView.account.set(response.account);
-        delete response.account;
+      if (response.student) {
+        app.mainView.student.set(response.student);
+        delete response.student;
       }
 
       return response;
@@ -48,7 +48,7 @@
       username: '',
       email: ''
     },
-    url: '/account/settings/identity/',
+    url: '/student/settings/identity/',
     parse: function(response) {
       if (response.user) {
         app.mainView.user.set(response.user);
@@ -68,7 +68,7 @@
       newPassword: '',
       confirm: ''
     },
-    url: '/account/settings/password/',
+    url: '/student/settings/password/',
     parse: function(response) {
       if (response.user) {
         app.mainView.user.set(response.user);
@@ -88,19 +88,19 @@
     initialize: function() {
       this.model = new app.Details();
       this.syncUp();
-      this.listenTo(app.mainView.account, 'change', this.syncUp);
+      this.listenTo(app.mainView.student, 'change', this.syncUp);
       this.listenTo(this.model, 'sync', this.render);
       this.render();
     },
     syncUp: function() {
       this.model.set({
-        _id: app.mainView.account.id,
-        first: app.mainView.account.get('name').first,
-        middle: app.mainView.account.get('name').middle,
-        last: app.mainView.account.get('name').last,
-        company: app.mainView.account.get('company'),
-        phone: app.mainView.account.get('phone'),
-        zip: app.mainView.account.get('zip')
+        _id: app.mainView.student.id,
+        first: app.mainView.student.get('name').first,
+        middle: app.mainView.student.get('name').middle,
+        last: app.mainView.student.get('name').last,
+        company: app.mainView.student.get('company'),
+        phone: app.mainView.student.get('phone'),
+        zip: app.mainView.student.get('zip')
       });
     },
     render: function() {
@@ -193,7 +193,7 @@
     el: '.page .container',
     initialize: function() {
       app.mainView = this;
-      this.account = new app.Account( JSON.parse( unescape($('#data-account').html()) ) );
+      this.student = new app.Student( JSON.parse( unescape($('#data-student').html()) ) );
       this.user = new app.User( JSON.parse( unescape($('#data-user').html()) ) );
 
       app.detailsView = new app.DetailsView();

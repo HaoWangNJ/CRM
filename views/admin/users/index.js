@@ -19,8 +19,8 @@ exports.find = function(req, res, next){
     filters['roles.admin'] = { $exists: true };
   }
 
-  if (req.query.roles && req.query.roles === 'account') {
-    filters['roles.account'] = { $exists: true };
+  if (req.query.roles && req.query.roles === 'student') {
+    filters['roles.student'] = { $exists: true };
   }
 
   req.app.db.models.User.pagedFind({
@@ -47,7 +47,7 @@ exports.find = function(req, res, next){
 };
 
 exports.read = function(req, res, next){
-  req.app.db.models.User.findById(req.params.id).populate('roles.admin', 'name.full').populate('roles.account', 'name.full').exec(function(err, user) {
+  req.app.db.models.User.findById(req.params.id).populate('roles.admin', 'name.full').populate('roles.student', 'name.full').exec(function(err, user) {
     if (err) {
       return next(err);
     }
@@ -214,14 +214,14 @@ exports.update = function(req, res, next){
   });
 
   workflow.on('patchAccount', function(user) {
-    if (user.roles.account) {
+    if (user.roles.student) {
       var fieldsToSet = {
         user: {
           id: req.params.id,
           name: user.username
         }
       };
-      req.app.db.models.Account.findByIdAndUpdate(user.roles.account, fieldsToSet, function(err, account) {
+      req.app.db.models.Student.findByIdAndUpdate(user.roles.student, fieldsToSet, function(err, account) {
         if (err) {
           return workflow.emit('exception', err);
         }
@@ -235,7 +235,7 @@ exports.update = function(req, res, next){
   });
 
   workflow.on('populateRoles', function(user) {
-    user.populate('roles.admin roles.account', 'name.full', function(err, populatedUser) {
+    user.populate('roles.admin roles.student', 'name.full', function(err, populatedUser) {
       if (err) {
         return workflow.emit('exception', err);
       }
@@ -283,7 +283,7 @@ exports.password = function(req, res, next){
           return workflow.emit('exception', err);
         }
 
-        user.populate('roles.admin roles.account', 'name.full', function(err, user) {
+        user.populate('roles.admin roles.student', 'name.full', function(err, user) {
           if (err) {
             return workflow.emit('exception', err);
           }
@@ -365,7 +365,7 @@ exports.linkAdmin = function(req, res, next){
           return workflow.emit('exception', err);
         }
 
-        user.populate('roles.admin roles.account', 'name.full', function(err, user) {
+        user.populate('roles.admin roles.student', 'name.full', function(err, user) {
           if (err) {
             return workflow.emit('exception', err);
           }
@@ -426,7 +426,7 @@ exports.unlinkAdmin = function(req, res, next){
           return workflow.emit('exception', err);
         }
 
-        user.populate('roles.admin roles.account', 'name.full', function(err, user) {
+        user.populate('roles.admin roles.student', 'name.full', function(err, user) {
           if (err) {
             return workflow.emit('exception', err);
           }
@@ -468,7 +468,7 @@ exports.linkAccount = function(req, res, next){
 
   workflow.on('validate', function() {
     if (!req.user.roles.admin.isMemberOf('root')) {
-      workflow.outcome.errors.push('You may not link users to accounts.');
+      workflow.outcome.errors.push('You may not link users to student.');
       return workflow.emit('response');
     }
 
@@ -481,22 +481,22 @@ exports.linkAccount = function(req, res, next){
   });
 
   workflow.on('verifyAccount', function(callback) {
-    req.app.db.models.Account.findById(req.body.newAccountId).exec(function(err, account) {
+    req.app.db.models.Student.findById(req.body.newAccountId).exec(function(err, account) {
       if (err) {
         return workflow.emit('exception', err);
       }
 
       if (!account) {
-        workflow.outcome.errors.push('Account not found.');
+        workflow.outcome.errors.push('Student not found.');
         return workflow.emit('response');
       }
 
       if (account.user.id && account.user.id !== req.params.id) {
-        workflow.outcome.errors.push('Account is already linked to a different user.');
+        workflow.outcome.errors.push('Student is already linked to a different user.');
         return workflow.emit('response');
       }
 
-      workflow.account = account;
+      workflow.student = account;
       workflow.emit('duplicateLinkCheck');
     });
   });
@@ -508,7 +508,7 @@ exports.linkAccount = function(req, res, next){
       }
 
       if (user) {
-        workflow.outcome.errors.push('Another user is already linked to that account.');
+        workflow.outcome.errors.push('Another user is already linked to that student.');
         return workflow.emit('response');
       }
 
@@ -522,13 +522,13 @@ exports.linkAccount = function(req, res, next){
         return workflow.emit('exception', err);
       }
 
-      user.roles.account = req.body.newAccountId;
+      user.roles.student = req.body.newAccountId;
       user.save(function(err, user) {
         if (err) {
           return workflow.emit('exception', err);
         }
 
-        user.populate('roles.admin roles.account', 'name.full', function(err, user) {
+        user.populate('roles.admin roles.student', 'name.full', function(err, user) {
           if (err) {
             return workflow.emit('exception', err);
           }
@@ -541,8 +541,8 @@ exports.linkAccount = function(req, res, next){
   });
 
   workflow.on('patchAccount', function() {
-    workflow.account.user = { id: req.params.id, name: workflow.outcome.user.username };
-    workflow.account.save(function(err, account) {
+    workflow.student.user = { id: req.params.id, name: workflow.outcome.user.username };
+    workflow.student.save(function(err, account) {
       if (err) {
         return workflow.emit('exception', err);
       }
@@ -559,7 +559,7 @@ exports.unlinkAccount = function(req, res, next){
 
   workflow.on('validate', function() {
     if (!req.user.roles.admin.isMemberOf('root')) {
-      workflow.outcome.errors.push('You may not unlink users from accounts.');
+      workflow.outcome.errors.push('You may not unlink users from student.');
       return workflow.emit('response');
     }
 
@@ -577,14 +577,14 @@ exports.unlinkAccount = function(req, res, next){
         return workflow.emit('response');
       }
 
-      var accountId = user.roles.account;
-      user.roles.account = null;
+      var accountId = user.roles.student;
+      user.roles.student = null;
       user.save(function(err, user) {
         if (err) {
           return workflow.emit('exception', err);
         }
 
-        user.populate('roles.admin roles.account', 'name.full', function(err, user) {
+        user.populate('roles.admin roles.student', 'name.full', function(err, user) {
           if (err) {
             return workflow.emit('exception', err);
           }
@@ -597,13 +597,13 @@ exports.unlinkAccount = function(req, res, next){
   });
 
   workflow.on('patchAccount', function(id) {
-    req.app.db.models.Account.findById(id).exec(function(err, account) {
+    req.app.db.models.Student.findById(id).exec(function(err, account) {
       if (err) {
         return workflow.emit('exception', err);
       }
 
       if (!account) {
-        workflow.outcome.errors.push('Account was not found.');
+        workflow.outcome.errors.push('Student was not found.');
         return workflow.emit('response');
       }
 
