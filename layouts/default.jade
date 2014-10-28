@@ -19,10 +19,25 @@ html
             span.icon-bar
         div.navbar-collapse.my-navbar-collapse.collapse
           ul.nav.navbar-nav
-            li: a(href='/') Home
-            li: a(href='/about/') About
-            li: a(href='/signup/') Sign Up
-            li: a(href='/contact/') Contact
+            li: a(href='/') 主页
+            li: a(href='/about/') 关于我们
+            li: a(href='/signup/') 注册
+            li: a(href='/contact/') 联系我们
+          form.navbar-form.navbar-left(role="search")
+            div.form-group
+              div.input-group
+                div.input-group-btn
+                  button.btn.btn-default.dropdown-toggle(type="button" data-toggle="dropdown") 搜索
+                    span.caret
+                      ul.dropdown-menu
+                        li: a(href="#") 课程
+                        li: a(href="#") 老师
+                        li.divider
+                        li: a(href="#") 其它
+
+                input.form-control(type="text")
+                  span.input-group-btn
+                    buttonbtn.btn-default(type="button") Go
           ul.nav.navbar-nav.navbar-right
             if user && user.username
               li: a(href='#{user.defaultReturnUrl}')
@@ -31,7 +46,7 @@ html
             else
               li: a(href='/login/')
                 i.fa.fa-user
-                |  Sign In
+                |  登录
 
     div.page
       div.container
@@ -42,8 +57,8 @@ html
         span.copyright.pull-right
           |&#169; #{copyrightYear} #{copyrightName}
         ul.links
-          li: a(href='/') Home
-          li: a(href='/contact/') Contact
+          li: a(href='/') 主页
+          li: a(href='/contact/') 联系我们
         div.clearfix
 
     div.ajax-spinner

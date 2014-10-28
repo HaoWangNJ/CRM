@@ -1,0 +1,54 @@
+extends ../../layouts/default
+
+block head
+  title Teachers
+    script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js')
+    script(src='index.js')
+
+block feet
+  script(src='/views/login/index.min.js?#{cacheBreaker}')
+
+block body
+  div.container.header
+      h2 初级班老师及课程安排
+      br
+
+  div.container(ng-app="" ng-controller="customersController")
+      div.row(ng_repeat="teacher in teachers")
+          div.row
+              div.col-md-4
+                  img(src="/images/teacher1.jpg")
+                  br
+                  p {{teacher.Name}}
+
+              div.col-md-8
+                  p {{teacher.Description}}
+
+          div.row
+              div.col-md-6
+                  div.panel.panel-default
+                      div.panel-heading
+                          h4.panel-title
+                              a(data-toggle="collapse" ng-href="{{'#collapse_' + teacher.Name}}" ng-click="showScheduleTable(teacher)") 课程安排>>>
+                      div.panel-collapse.collapse(ng-attr-id="{{'collapse_'+ teacher.Name}}")
+                          div.panel-body
+                              table.table.table-condensed.table-bordered.table-hover.text-center
+                                  thead
+                                  tr.warning
+                                      th.text-center 时间
+                                      th.text-center 星期一
+                                      th.text-center 星期二
+                                      th.text-center 星期三
+                                      th.text-center 星期四
+                                      th.text-center 星期五
+                                      th.text-center 星期六
+                                      th.text-center 星期日
+                                  tbody
+                                  tr(ng-repeat="row in teacher.schedule")
+                                      td(ng-repeat="val in row.time track by $index" ng-class="{success: val == 'available'})
+                                          span(ng-show="$index==0") {{val}}
+                                          a(ng-show="val=='available'" href="#" ng-style="{color:'black'}") 选课
+
+          br
+          hr
+
