@@ -47,6 +47,10 @@ exports = module.exports = function(app, passport) {
   app.get('/signup/', require('./views/signup/index').init);
   app.post('/signup/', require('./views/signup/index').signup);
 
+  // teacher sign up
+  app.get('/teachersignup/', require('./views/teachersignup/index').init);
+  app.post('/teachersignup/', require('./views/teachersignup/index').teachersignup);
+
   //social sign up
   app.post('/signup/social/', require('./views/signup/index').signupSocial);
   app.get('/signup/twitter/', passport.authenticate('twitter', { callbackURL: '/signup/twitter/callback/' }));
