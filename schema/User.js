@@ -30,6 +30,10 @@ var exports = module.exports = function(app, mongoose) {
       return true;
     }
 
+    if (role === "teacher" && this.roles.teacher) {
+      return true;
+    }
+
     return false;
   };
   userSchema.methods.defaultReturnUrl = function() {

@@ -1,5 +1,5 @@
 'use strict';
 
 exports.init = function(req, res){
-  res.render('student/index');
+  res.render('teacher/index');
 };
