@@ -12,8 +12,7 @@ exports = module.exports = function(app, mongoose) {
         },
         description: String
     });
-    teacherSchema.plugin(require('./plugins/pagedFind'));
-    teacherSchema.index({ name: 1 });
-    teacherSchema.set('autoIndex', (app.get('env') === 'development'));
+    courseSchemaSchema.index({ name: 1 });
+    courseSchema.set('autoIndex', (app.get('env') === 'development'));
     app.db.model('Course', courseSchema);
 };
