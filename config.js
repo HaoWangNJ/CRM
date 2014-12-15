@@ -21,7 +21,7 @@ exports.smtp = {
   },
   credentials: {
     user: process.env.SMTP_USERNAME || 'hao.hwang@gmail.com',
-    password: process.env.SMTP_PASSWORD || 'lrr121.wh103',
+    password: process.env.SMTP_PASSWORD || '123456',
     host: process.env.SMTP_HOST || 'smtp.gmail.com',
     ssl: true
   }
