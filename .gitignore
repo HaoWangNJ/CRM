@@ -8,3 +8,4 @@
 
 # Ignore config.js to prevent any leak of email credentials
 config.js
+.idea/modules.xml
