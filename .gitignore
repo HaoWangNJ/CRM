@@ -8,3 +8,5 @@
 
 # Ignore config.js to prevent any leak of email credentials
 node_modules/.DS_Store
+
+.DS_Store
