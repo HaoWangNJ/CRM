@@ -13,7 +13,7 @@ block body
   div.row
     div.col-sm-6
       div.page-header
-        h1 Sign Up
+        h1 学生注册
       div#signup
       if oauthTwitter || oauthGitHub || oauthFacebook || oauthGoogle || oauthTumblr
         hr
@@ -61,16 +61,16 @@ block body
           |<%- err %>
         |<% }); %>
       div.form-group(class!='<%- errfor.username ? "has-error" : "" %>')
-        label Pick a Username:
+        label 选择用户名:
         input.form-control(type='text', name='username', value!='<%= username %>')
         span.help-block <%- errfor.username %>
       div.form-group(class!='<%- errfor.email ? "has-error" : "" %>')
-        label Enter Your Email:
+        label 请提供注册邮箱:
         input.form-control(type='text', name='email', value!='<%= email %>')
         span.help-block <%- errfor.email %>
       div.form-group(class!='<%- errfor.password ? "has-error" : "" %>')
-        label Create a Password:
+        label 请提供密码:
         input.form-control(type='password', name='password', value!='<%= password %>')
         span.help-block <%- errfor.password %>
       div.form-group
-        button.btn.btn-primary.btn-signup(type='button') Create My Account
+        button.btn.btn-primary.btn-signup(type='button') 创建账户
