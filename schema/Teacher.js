@@ -11,6 +11,7 @@ exports = module.exports = function(app, mongoose) {
             id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
             name: { type: String, default: '' }
         },
+        description: { tyep: String, default: ''},
         company: { type: String, default: '' },
         phone: { type: String, default: '' },
         zip: { type: String, default: '' }

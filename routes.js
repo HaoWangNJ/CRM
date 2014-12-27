@@ -47,6 +47,9 @@ exports = module.exports = function(app, passport) {
   app.get('/signup/', require('./views/signup/index').init);
   app.post('/signup/', require('./views/signup/index').signup);
 
+  //course
+  app.get('/course/', require('./views/course/index').init);
+
   // teacher sign up
   app.get('/teachersignup/', require('./views/teachersignup/index').init);
   app.post('/teachersignup/', require('./views/teachersignup/index').teachersignup);
